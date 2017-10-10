@@ -1,0 +1,21 @@
+name = "kreida-wasm-chart"
+target = "../../target/wasm32-unknown-emscripten"
+
+build:
+	mkdir -p wasm
+	rm -rf {{target}}/release/deps/*.wasm
+	rm -rf {{target}}/release/{{name}}.js
+	cargo build --package {{name}} --target=wasm32-unknown-emscripten --release
+	cp {{target}}/release/{{name}}.js wasm/{{name}}.js
+	cp {{target}}/release/deps/*.wasm wasm/{{name}}.wasm
+	cp web/* wasm/
+
+debug:
+	mkdir -p wasm
+	rm -rf {{target}}/debug/deps/*.wasm*
+	rm -rf {{target}}/debug/{{name}}.js
+	cargo build --package {{name}} --target=wasm32-unknown-emscripten
+	cp {{target}}/debug/{{name}}.js wasm/{{name}}.js
+	cp {{target}}/debug/deps/*.wasm wasm/{{name}}.wasm
+	cp {{target}}/debug/deps/*.wasm.map wasm/{{name}}.wasm.map
+	cp web/* wasm/

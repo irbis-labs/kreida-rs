@@ -1,0 +1,5 @@
+#!/bin/bash
+
+exported_functions="'_sinusoid','_rotating','_lines','_spirograph'"
+
+emcc "-02" "-s" "EXPORTED_FUNCTIONS=[$exported_functions]" $@
