@@ -11,7 +11,7 @@ workspace = "../.."
 
 [dependencies.webplatform]
 version = "*"
-path = "/home/stalker/devel/lib/rust-webplatform"
+git = "https://github.com/irbis-labs/rust-webplatform"
 
 [dependencies.kreida]
 version = "0.0.1"

@@ -13,7 +13,7 @@ documentation = "https://docs.rs/kreida-rs/"
 publish = true
 
 [badges]
-travis-ci = { repository = "irbis-labs/rsmorphy" }
+travis-ci = { repository = "irbis-labs/kreida-rs" }
 
 
 [workspace]
