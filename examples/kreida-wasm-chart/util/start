@@ -1,6 +1,0 @@
-#!/bin/bash
-
-just
-cd wasm
-emrun --no_browser --port 3000 index.html
-cd ..

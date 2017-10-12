@@ -1,4 +1,0 @@
-#!/bin/bash
-
-just debug
-python2 -m SimpleHTTPServer 3000

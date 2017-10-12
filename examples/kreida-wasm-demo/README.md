@@ -36,31 +36,23 @@ emsdk activate sdk-incoming-64bit
 cargo install just
 ```
 
-## Build
+## Build and Run
 
 ``` sh
 just
 ```
 
-## Run
+or
 
-Just place the content of wasm folder in the root of you web-server and open index.html from it in the browser.
-
-Or you can start standalone server with `emrun` from `emsdk`
-
-```sh
-emrun --no_browser --port 3000 wasm/index.html
+``` sh
+just debug
 ```
-
-## Build and run in one line
-
-You may just run `./util/start` and open `http://127.0.0.1:3000/` in your browser.
 
 
 ## Screenshots
 
-![](img/spiro.png)
-![](img/vortex.png)
+![](assets/screenshot/spiro.png)
+![](assets/screenshot/vortex.png)
 
 
 ## License

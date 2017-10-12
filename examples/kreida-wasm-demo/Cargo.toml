@@ -10,7 +10,7 @@ workspace = "../.."
 
 
 [dependencies.webplatform]
-version = "*"
+version = "0.5"
 git = "https://github.com/irbis-labs/rust-webplatform"
 
 [dependencies.kreida]

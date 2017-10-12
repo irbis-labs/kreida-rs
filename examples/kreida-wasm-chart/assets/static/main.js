@@ -1,7 +1,7 @@
 ;(() => {
     "use strict";
 
-    let Module = window.Module = {
+    const Module = window.Module = {
         preRun: [],
         postRun: [main],
         wasmBinaryFile: "kreida-wasm-chart.wasm",
