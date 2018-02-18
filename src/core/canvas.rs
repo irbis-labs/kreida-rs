@@ -33,7 +33,7 @@ impl Canvas {
     }
 
     pub fn buffer(&mut self) -> Buffer<'static> {
-        Buffer::from_row(self.buf.as_mut_ptr(), self.buf.len(), self.width)
+        Buffer::from_raw(self.buf.as_mut_ptr(), self.buf.len(), self.width)
     }
 
     pub fn buf_as_ptr(&self) -> *const Color {

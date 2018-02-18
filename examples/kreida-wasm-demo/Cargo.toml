@@ -7,12 +7,13 @@ workspace = "../.."
 
 
 [dependencies]
-
-
-[dependencies.webplatform]
-version = "0.5"
-git = "https://github.com/irbis-labs/rust-webplatform"
+stdweb = "0.3"
 
 [dependencies.kreida]
 version = "0.0.1"
 path = "../.."
+
+[dependencies.yew]
+git = "https://github.com/alexander-irbis/yew.git"
+branch = "animation"
+version = "*"

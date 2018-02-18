@@ -1,14 +1,20 @@
 ;(() => {
     "use strict";
 
-    const Module = window.Module = {
-        preRun: [],
-        postRun: [main],
-        wasmBinaryFile: "kreida-wasm-demo.wasm",
-        // onRuntimeInitialized: main,
-    };
+    console.log("Main loaded 2");
+
+//    let Module = window.Module = {
+//        preRun: [],
+////        postRun: [],
+//        postRun: [main],
+//        wasmBinaryFile: "kreida-wasm-demo.wasm",
+////        onRuntimeInitialized: main,
+//    };
+    Module.onRuntimeInitialized = main;
+    console.log("Module", Module);
 
     function main() {
+        console.log("main() called");
         const canvas_el = document.createElement("canvas");
         canvas_el.setAttribute("id", "canvas");
         document.body.appendChild(canvas_el);

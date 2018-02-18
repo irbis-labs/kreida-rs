@@ -28,4 +28,7 @@ name = "kreida"
 
 
 [dependencies]
-num = "0.1"
+
+[dependencies.num]
+version = "0.1"
+default-features = false

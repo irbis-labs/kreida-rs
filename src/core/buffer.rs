@@ -11,14 +11,14 @@ pub struct Buffer<'a> {
 }
 
 impl<'a> Buffer<'a> {
-    pub fn from_row(ptr: *mut Color, len: usize, width: usize) -> Self {
-        if len % width != 0 {
+    pub fn from_raw(ptr: *mut Color, len: usize, width: usize) -> Self {
+        if width != 0 && len % width != 0 {
             unreachable!()
         }
         Buffer {
             buf: unsafe { slice::from_raw_parts_mut(ptr, len) },
             width,
-            height: len / width,
+            height: if width == 0 { 0 } else { len / width },
         }
     }
 

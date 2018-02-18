@@ -11,42 +11,54 @@
 
 > First, add the wasm32 target via rustup:
 
-```sh
+```bash
 rustup target add wasm32-unknown-emscripten
 ```
 
 > Now, install the emscripten SDK.
 
-This will take nearly an hour, a lot of RAM, and about 20 Gb of HDD. 
-
-```sh
+```bash
 curl -O https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-portable.tar.gz
 tar -xzf emsdk-portable.tar.gz
 source emsdk-portable/emsdk_env.sh
 emsdk update
+```
+
+And then you can compile latest sdk from sources (this will take nearly an hour, a lot of RAM, and about 20 Gb of HDD)
+
+```bash
 emsdk install sdk-incoming-64bit
 emsdk activate sdk-incoming-64bit
 ```
 
+or you can install a precompiled binary (run `emsdk list` to check available versions)
+
+```bash
+emsdk install sdk-1.37.33-64bit
+emsdk activate sdk-1.37.33-64bit
+```
+
 > You may need to run `source emsdk-portable/emsdk_env.sh` one extra time
 
-#### [Just](https://crates.io/crates/just)
+#### [Cargo-Web](https://crates.io/crates/cargo-web)
 
 ``` sh
-cargo install just
+cargo install cargo-web
 ```
 
 ## Build and Run
 
 ``` sh
-just
+cargo web start
 ```
 
 or
 
 ``` sh
-just debug
+cargo web start --release
 ```
+
+and then open `http://127.0.0.1:8000` or `http://[::1]:8000` in your browser.
 
 
 ## Screenshots
