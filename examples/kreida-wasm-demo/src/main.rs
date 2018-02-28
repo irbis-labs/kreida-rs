@@ -6,7 +6,8 @@
 
 // (Default TOTAL_MEMORY is 16777216)
 #[cfg_attr(target_arch="wasm32", link_args = "\
-    -s TOTAL_MEMORY=268435456\
+    -s TOTAL_MEMORY=268435456 \
+    -s ASSERTIONS=1 \
 ")]
 
 extern {}
@@ -20,12 +21,24 @@ extern crate yew;
 pub mod effects;
 
 use kreida::*;
+
+use stdweb::unstable::TryInto;
 use stdweb::web::{
     document,
-    Element,
+    window,
+    CanvasRenderingContext2d,
+//    Element,
+    IEventTarget,
+    IHtmlElement,
+//    ImageData,
 };
-use stdweb::unstable::TryInto;
+use stdweb::web::event::{
+//    MouseMoveEvent,
+    ResizeEvent,
+};
+use stdweb::web::html_element::CanvasElement;
 
+use yew::html::ComponentUpdate;
 use yew::prelude::*;
 use yew::services::Task;
 use yew::services::animation::AnimationService;
@@ -39,8 +52,8 @@ struct Model {
     dark_side: bool,
     time: f64,
     canvas: kreida::Canvas,
-    canvas_element: Element,
-    ctx2d: stdweb::Value,
+    canvas_element: CanvasElement,
+    ctx2d: CanvasRenderingContext2d,
     job: Option<Box<Task>>,
     frames: Vec<f64>,
     fun: Fun,
@@ -57,10 +70,12 @@ enum Fun {
 enum Msg {
     ToggleDark,
     ToggleFullscreen,
+    Resize,
     Select(Fun),
     Start,
     Step(f64),
 }
+
 
 impl Component<Context> for Model {
     type Msg = Msg;
@@ -80,6 +95,10 @@ impl Component<Context> for Model {
                 };
             }
             ToggleFullscreen => {
+                self.toggle_fullscreen();
+            }
+            Resize => {
+                self.resize();
             }
             Select(fun) => {
                 self.fun = fun;
@@ -117,10 +136,12 @@ impl Renderable<Context, Model> for Model {
                     </div>
                     <div class="mode",>
                         <div class="mode", onclick=|_| Msg::ToggleDark,>
-                            { if self.dark_side { "|" } else { "_" } }
+                            <i class=("fa",
+                                if self.dark_side { "fa-sun-o" } else { "fa-moon-o" }),></i>
                         </div>
-                        <div class="fullscreen", onclick=|_| Msg::ToggleFullscreen,>
-                            { "X" }
+                        <div class="fullscreen",>
+//                        <div class="fullscreen", onclick=|_| Msg::ToggleFullscreen,>
+                            <i class=("fa", "fa-expand"),></i>
                         </div>
                     </div>
                 </menu>
@@ -148,13 +169,14 @@ impl Renderable<Context, Model> for Model {
 
 impl Model {
     fn new() -> Self {
-        let canvas_element: Element = document().create_element( "canvas" );
-
-        let ctx2d = js! {
+        let canvas_element: CanvasElement = document().create_element( "canvas" ).unwrap().try_into().unwrap();
+        // FIXME use stdweb api instead of inline js
+        js!{
             @{&canvas_element}.setAttribute("id", "canvas");
             document.body.appendChild(@{&canvas_element});
-            return @{&canvas_element}.getContext("2d");
-        };
+        }
+
+        let ctx2d: CanvasRenderingContext2d = canvas_element.get_context().unwrap();
 
         let mut model = Model {
             dark_side: false,
@@ -173,27 +195,28 @@ impl Model {
     }
 
     pub fn resize(&mut self) {
-        let resized: bool = js! {
-            var el = @{&self.canvas_element};
-            var width = ~~(el.offsetWidth);
-            var height = ~~(el.offsetHeight);
 
-            if (
-                width !== el.width ||
-                height !== el.height
-            ) {
-                el.width = width;
-                el.height = height;
-                return true;
-            }
-            return false;
+        let offset_width = self.canvas_element.offset_width() as u32;
+        let offset_height = self.canvas_element.offset_height() as u32;
+
+        let width = self.canvas_element.width();
+        let height = self.canvas_element.height();
+
+        if width != offset_width {
+            self.canvas_element.set_width(offset_width);
         }
-            .try_into().unwrap();
-        if resized {
-            let width: u32 = js!( return @{&self.canvas_element}.width; ).try_into().unwrap();
-            let height: u32 = js!( return @{&self.canvas_element}.height; ).try_into().unwrap();
+
+        if height != offset_height {
+            self.canvas_element.set_height(offset_height);
+        }
+
+        if width != offset_width || height != offset_height {
             self.canvas.resize(width as usize, height as usize);
         }
+    }
+
+    fn toggle_fullscreen(&mut self) {
+        println!("toggle_fullscreen");
     }
 
     fn render_frame(&mut self) {
@@ -211,7 +234,10 @@ impl Model {
         };
         let buf_ptr = self.canvas.buf_as_ptr() as u32;
         let (width, height) = (self.canvas.width() as u32, self.canvas.height() as u32);
-        println!("buf_len: {}, w * h: {}", buf_len, width * height);
+        println!("buf_len: {}, w * h: {}; w x h: {} x {}", buf_len, width * height, width, height);
+        // FIXME use stdweb api instead of inline js
+//        let image_data = ImageData(Reference());
+//        self.ctx2d.put_image_data(image_data);
         js! {
             var buf = new Uint8ClampedArray(Module.HEAPU8.buffer, @{buf_ptr}, @{buf_len});
             var image_data = new ImageData(buf, @{width}, @{height});
@@ -232,7 +258,25 @@ fn main() {
     let context = Context {
         animation: AnimationService::new(),
     };
-    let app: App<_, Model> = App::new(context);
+    let mut app: App<_, Model> = App::new(context);
+
+    let env = app.get_env();
+    window().add_event_listener( move |_: ResizeEvent| {
+        env.sender().send(ComponentUpdate::Message(Msg::Resize));
+    });
+    js! {
+        document.body.addEventListener("click", function(event) {
+            if (!event.target.matches(".fullscreen,.fullscreen *")) return;
+            var element = document.body;
+            var isFullscreen = document.webkitIsFullScreen || document.mozFullScreen || false;
+
+            element.requestFullScreen = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || function () { return false; };
+            document.cancelFullScreen = document.cancelFullScreen || document.webkitCancelFullScreen || document.mozCancelFullScreen || function () { return false; };
+
+            isFullscreen ? document.cancelFullScreen() : element.requestFullScreen();
+        });
+    };
+
     app.mount_to_body();
     yew::run_loop();
 }
