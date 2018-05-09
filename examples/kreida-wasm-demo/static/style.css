@@ -6,7 +6,7 @@ html, body {
     right: 0;
     top: 0;
     bottom: 0;
-    background: white;
+    background: #fff;
 }
 
 .ui {
@@ -17,7 +17,7 @@ html, body {
     bottom: 0;
     overflow: hidden;
     font-family: Arial, sans-serif;
-    color: #444;
+    color: #f90;
 }
 
 .ui > menu.top {
@@ -55,8 +55,8 @@ html, body {
     height: 4rem;
     font-size: 2rem;
     text-align: center;
-    border: 1px solid #ff0000ff;
-    background: #ff000022;
+    border: 1px solid #ff8800ff;
+    background: #ff880022;
 
     cursor: pointer;
 }
@@ -74,8 +74,8 @@ html, body {
 
 .ui > menu.top > .mode > * {
     cursor: pointer;
-    border: 1px solid #ff0000ff;
-    background: #ff000022;
+    border: 1px solid #ff8800ff;
+    background: #ff880022;
     display: inline-block;
     width: 2em;
     text-align: center;
@@ -94,8 +94,8 @@ html, body {
 
 .ui > menu.bottom > * {
     cursor: pointer;
-    border: 1px solid #ff0000ff;
-    background: #ff000022;
+    border: 1px solid #ff8800ff;
+    background: #ff880022;
     display: inline-block;
     padding: 0 1em;
     text-align: center;
@@ -107,7 +107,7 @@ html, body {
 }
 
 .dark .ui {
-    color: #ddd;
+    color: #da0;
 }
 
 #canvas {

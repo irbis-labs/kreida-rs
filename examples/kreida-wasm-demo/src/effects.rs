@@ -52,12 +52,9 @@ pub fn wave(buffer: &mut Buffer, phi: f64) {
 
             let ty = - (r * b + dkr) * size * 0.015;
 
-//            let x = w_2 + (     rkx * k * x) as isize;
-//            let y = h_2 + (ty + rky * k * y) as isize;
             let x = w_2 + (     rkx * k * x).round() as isize;
             let y = h_2 + (ty + rky * k * y).round() as isize;
             buffer.bar((x, y, x + 2, y + 2), color);
-//            canvas.point(x, y, color);
         }
     }
 }
@@ -87,8 +84,6 @@ pub fn lines(buffer: &mut Buffer, phi: f64) {
         );
 
         buffer.line(a, b, color);
-//        canvas.point(a.x, a.y, fg);
-//        canvas.point(b.x, b.y, fg);
     }
 }
 
@@ -102,23 +97,21 @@ pub fn spirograph(buffer: &mut Buffer, phi: f64) {
 
     buffer.fade(254);
 
-    let t = phi * PI;
+    let t = phi;
 
     const M: isize = 1;
     const N: isize = 2000;
     for m in 0..M {
         for n in 0..N {
-            let tt = t - n as f64 / N as f64 / 5.0;
+            let tt = t - n as f64 / N as f64 / 15.0;
 
-            let tr1 = step(tt / 13.3, 7.7) / 7.7;
-            let tr2 = step(tt / 17.7, 3.3) / 3.3;
+            let tr1 = step(tt / 24.0, 9.0) / 9.0;
+            let tr2 = step(tt / 12.0, 3.0) / 3.0;
 
             let r0 = 1.0;
 
-            let r1 = r0 * step(map_sin((3.0/23.0, 22.0/23.0), tr1).sqrt(), 1.0 / 19.0);
-            let r2 = r1 * step(map_sin((2.0/17.0, 16.0/17.0), tr2).sqrt(), 1.0 / 14.0);
-//            let r1 = r0 * (0.05 + 0.9 * (tr1.sin() * 0.5 + 0.5));
-//            let r2 = r1 * (0.05 + 0.9 * (tr2.sin() * 0.5 + 0.5));
+            let r1 = r0 * step(map_range((0.0, 10.0), (3.0/23.0, 22.0/23.0), (tr1 * 3.0) % 10.0).sqrt(), 1.0 / 19.0);
+            let r2 = r1 * step(map_range((0.0, 10.0), (2.0/17.0, 16.0/17.0), (tr2 * 7.0) % 10.0).sqrt(), 1.0 / 14.0);
 
             let tc = tt * 0.005;
 
@@ -131,9 +124,9 @@ pub fn spirograph(buffer: &mut Buffer, phi: f64) {
             let a = Point::new(w_2 + (r * x) as isize, h_2 + (r * y) as isize);
 
             let color = Color::rgb(
-                ((0.5 + 0.5 * (3.0 * tc).sin()) * 255.0) as u8,
-                ((0.5 + 0.5 * (5.0 * tc).sin()) * 255.0) as u8,
-                ((0.5 + 0.5 * (7.0 * tc).sin()) * 255.0) as u8,
+                ((0.5 + 0.5 * (11.0 * tc).sin() * 0.9) * 255.0) as u8,
+                ((0.5 + 0.5 * (17.0 * tc).sin() * 0.9) * 255.0) as u8,
+                ((0.5 + 0.5 * (23.0 * tc).sin() * 0.9) * 255.0) as u8,
             );
 
             buffer.bar((a.x, a.y, a.x + 2, a.y + 2), color);
@@ -160,8 +153,8 @@ pub fn sinusoid1(buffer: &mut Buffer, phi: f64) {
         for ix in (10 .. buffer.width() - 10).rev().step_by(10) {
             let x = (ix as f64) * 2.0 / (buffer.width() as f64) - 1.0;
             let y = h_3 as f64 * ((x * 12.0 - phi).cos() * (x * 4.0 - phi * 0.9).cos());
-            let iy = h_2 as isize - y as isize;
-//            let iy = h_2 as isize - y.round() as isize;
+//            let iy = h_2 as isize - y as isize;
+            let iy = h_2 as isize - y.round() as isize;
             let ix = (ix + i * 2) as isize;
             let d = (M - i) as isize / 1;
             let (x1, y1, x2, y2) = (ix, iy, ix + d, iy + d);
@@ -179,14 +172,13 @@ pub fn sinusoid2(buffer: &mut Buffer, phi: f64) {
     let fg1 = Color::rgb(255, 31, 0);
     let fg2 = Color::rgb(63, 191, 0);
 
-//    buffer.clear(bg);
     buffer.fade(240);
 
     for ix in (10 .. buffer.width() - 10).step_by(10) {
         let x = (ix as f64) * 2.0 / (buffer.width() as f64) - 1.0;
         let y = h_5 as f64 * ((x * 12.0 + phi * 2.5).cos() + (x * 4.0 - phi * 1.7).cos());
-        let iy = h_2 - y as isize;
-//        let iy = h_2 - y.round() as isize;
+//        let iy = h_2 - y as isize;
+        let iy = h_2 - y.round() as isize;
         let ix = ix as isize;
         let color = if y < 0.0 { fg1 } else { fg2 };
         let rect = Rect::new((ix - 3, h_2), (ix + 4, iy));

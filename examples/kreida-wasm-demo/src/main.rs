@@ -38,10 +38,12 @@ use stdweb::web::event::{
 };
 use stdweb::web::html_element::CanvasElement;
 
-use yew::html::ComponentUpdate;
 use yew::prelude::*;
 use yew::services::Task;
-use yew::services::animation::AnimationService;
+
+// TODO move into yew
+pub mod animation;
+use animation::AnimationService;
 
 
 struct Context {
@@ -78,14 +80,14 @@ enum Msg {
 
 
 impl Component<Context> for Model {
-    type Msg = Msg;
+    type Message = Msg;
     type Properties = ();
 
     fn create(_: Self::Properties, _: &mut Env<Context, Self>) -> Self {
         Model::new()
     }
 
-    fn update(&mut self, msg: Self::Msg, context: &mut Env<Context, Self>) -> ShouldRender {
+    fn update(&mut self, msg: Self::Message, env: &mut Env<Context, Self>) -> ShouldRender {
         use Msg::*;
         match msg {
             ToggleDark => {
@@ -102,12 +104,12 @@ impl Component<Context> for Model {
             }
             Select(fun) => {
                 self.fun = fun;
-                context.send_back(|_| Start).emit(());
+                env.send_back(|_| Start).emit(());
             }
             Start => {
                 if self.job.is_none() {
-                    let callback = context.send_back(|tm| Step(tm));
-                    let handle = context.animation.spawn(callback);
+                    let callback = env.send_back(|tm| Step(tm));
+                    let handle = env.animation.spawn(callback);
                     self.job = Some(Box::new(handle));
                 }
             },
@@ -234,8 +236,7 @@ impl Model {
         };
         let buf_ptr = self.canvas.buf_as_ptr() as u32;
         let (width, height) = (self.canvas.width() as u32, self.canvas.height() as u32);
-        println!("buf_len: {}, w * h: {}; w x h: {} x {}", buf_len, width * height, width, height);
-        // FIXME use stdweb api instead of inline js
+        // FIXME use stdweb api instead of inline js as soon as it ready
 //        let image_data = ImageData(Reference());
 //        self.ctx2d.put_image_data(image_data);
         js! {
@@ -258,12 +259,13 @@ fn main() {
     let context = Context {
         animation: AnimationService::new(),
     };
-    let mut app: App<_, Model> = App::new(context);
+    let app: App<_, Model> = App::new(context);
 
-    let env = app.get_env();
+    let mut env = app.mount_to_body();
     window().add_event_listener( move |_: ResizeEvent| {
-        env.sender().send(ComponentUpdate::Message(Msg::Resize));
+        env.send_message(Msg::Resize)
     });
+
     js! {
         document.body.addEventListener("click", function(event) {
             if (!event.target.matches(".fullscreen,.fullscreen *")) return;
@@ -275,8 +277,6 @@ fn main() {
 
             isFullscreen ? document.cancelFullScreen() : element.requestFullScreen();
         });
-    };
-
-    app.mount_to_body();
+    }
     yew::run_loop();
 }
