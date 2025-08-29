@@ -2,7 +2,7 @@
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css";
 @import "https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap";
 
-main {
+.main {
   font-family: 'Roboto', sans-serif;
   overflow: hidden;
   padding: 0;
@@ -31,10 +31,12 @@ main {
   }
 }
 
-canvas {
-  position: fixed;
+.main-canvas {
+  position: absolute;
   left: 0;
   top: 0;
+  bottom: 0;
+  right: 0;
   width: 100%;
   height: 100%;
   z-index: -1;
@@ -48,90 +50,150 @@ canvas {
   bottom: 0;
   overflow: hidden;
 
-  > menu.top {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    overflow: hidden;
 
-    > * {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-    }
+}
 
-    > .fps-counter {
-      top: 1rem;
-      left: 1em;
-      width: 4em;
-      line-height: 4rem;
-      height: 4rem;
-      font-size: 2rem;
-      text-align: center;
-      border: 1px solid #ff8800ff;
-      background: #ff880022;
+.menu-top-left {
+  position: absolute;
+  left: 1rem;
+  right: auto;
+  top: 1rem;
+  bottom: auto;
+  overflow: hidden;
+}
 
-      cursor: pointer;
-    }
+.fps-counter {
+  top: 1rem;
+  left: 1em;
+  width: 4em;
+  line-height: 4rem;
+  height: 4rem;
+  font-size: 2rem;
+  text-align: center;
+  border: 1px solid #ff8800ff;
+  background: #ff880022;
 
-    > .mode {
-      top: 1rem;
-      right: 1em;
-      left: auto;
+  cursor: pointer;
 
-      line-height: 4rem;
-      height: 4rem;
-      font-size: 2rem;
-      text-align: center;
+  border-radius: 1rem;
+}
 
-      > * {
-        cursor: pointer;
-        border: 1px solid #ff8800ff;
-        background: #ff880022;
-        display: inline-block;
-        width: 2em;
-        text-align: center;
-        margin-left: -1px;
-      }
-    }
-  }
+.menu-top-right {
+  position: absolute;
+  left: auto;
+  right: 1rem;
+  top: 1rem;
+  bottom: auto;
 
-  > h1 {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 500;
-    line-height: 3rem;
-    font-size: 2rem;
+  display: flex;
+  justify-content: space-between;
+}
 
-    bottom: auto;
-    height: auto;
-    top: 1rem;
+.mode {
+  line-height: 4rem;
+  height: 4rem;
+  font-size: 2rem;
+  text-align: center;
 
+  > * {
+    cursor: pointer;
+    border: 1px solid #ff8800ff;
+    background: #ff880022;
+    display: inline-block;
+    width: 2em;
     text-align: center;
+    margin-left: -1px;
 
-    z-index: -100;
-  }
+    &:first-child {
+      border-top-left-radius: 1rem;
+      border-bottom-left-radius: 1rem;
+      margin-left: 0;
+    }
 
-  > menu.bottom {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: auto;
-    bottom: 2rem;
-    overflow: hidden;
-    text-align: center;
-
-    > * {
-      cursor: pointer;
-      border: 1px solid #ff8800ff;
-      background: #ff880022;
-      display: inline-block;
-      padding: 0 1em;
-      text-align: center;
-      margin-left: -1px;
+    &:last-child {
+      border-top-right-radius: 1rem;
+      border-bottom-right-radius: 1rem;
     }
   }
+}
+
+.title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 500;
+  line-height: 3rem;
+  font-size: 2rem;
+
+  bottom: auto;
+  height: auto;
+  top: 1rem;
+
+  display: flex;
+  justify-content: center;
+}
+
+.title__bar {
+  border-bottom: 2px solid #ff8800ff;
+}
+
+.menu-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: auto;
+  bottom: 2rem;
+  overflow: hidden;
+  text-align: center;
+
+  display: flex;
+  justify-content: center;
+
+  line-height: 2rem;
+
+  > * {
+    cursor: pointer;
+    border: 1px solid #ff8800ff;
+    background: #ff880022;
+    display: inline-block;
+    padding: 0 1em;
+    text-align: center;
+    margin-left: -1px;
+
+    &:first-child {
+      border-top-left-radius: 1rem;
+      border-bottom-left-radius: 1rem;
+      margin-left: 0;
+    }
+
+    &:last-child {
+      border-top-right-radius: 1rem;
+      border-bottom-right-radius: 1rem;
+    }
+  }
+}
+
+.menu-right {
+  position: absolute;
+  left: auto;
+  right: 1rem;
+  top: 6rem;
+  bottom: auto;
+
+  display: flex;
+}
+
+.clock {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 500;
+  line-height: 4rem;
+  height: 4rem;
+  width: 16rem;
+  font-size: 2rem;
+  text-align: right;
+  border: 1px solid #ff8800ff;
+  background: #ff880022;
+
+  cursor: pointer;
+
+  border-radius: 1rem;
+  padding: 0 1rem;
 }

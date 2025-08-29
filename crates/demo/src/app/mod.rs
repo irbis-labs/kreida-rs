@@ -169,7 +169,6 @@ impl Component for DemoApp {
         let set_lines = ctx.link().callback(|_| Cmd::Select(Fun::Lines));
         let set_wave = ctx.link().callback(|_| Cmd::Select(Fun::Wave));
 
-        let side = if self.dark_side { "Dark" } else { "Light" };
         let side_class = if self.dark_side { "dark" } else { "light" };
         let side_icon = if self.dark_side { "fa-sun" } else { "fa-moon" };
         let fullscreen_icon = if self.is_fullscreen {
@@ -181,27 +180,40 @@ impl Component for DemoApp {
         html! {
             <main
                 ref = {&self.root_node}
-                class = {side_class}
+                class = {["main", side_class]}
             >
-                <canvas ref = {&self.canvas_node}></canvas>
-                <nav class="ui">
-                    <h1>
-                        { format!("Kreida animation demo :: Rust + WAsm + Canvas 2D ({} side)", side) }
-                    </h1>
-                    <menu class="top">
+                <canvas
+                    ref={&self.canvas_node}
+                    class="main-canvas"
+                ></canvas>
+
+                <div class="ui">
+                    <header class="title">
+                        <h1 class="title__bar">
+                            { "Kreida Demo :: Rust + WAsm + Canvas 2D" }
+                        </h1>
+                    </header>
+                    <menu class="menu-top-left">
                         <div class="fps-counter">
                             { self.frames.len() }
                         </div>
+                    </menu>
+                    <menu class="menu-top-right">
                         <div class="mode">
-                            <div class="mode" onclick={toggle_dark}>
+                            <div class="mode__side" onclick={toggle_dark}>
                                 <i class={["fa", side_icon]}></i>
                             </div>
-                           <div class="fullscreen" onclick={toggle_fullscreen}>
+                           <div class="mode__fullscreen" onclick={toggle_fullscreen}>
                                 <i class={["fa", fullscreen_icon]}></i>
                             </div>
                         </div>
                     </menu>
-                    <menu class="bottom">
+                    <menu class="menu-right">
+                        <div class="clock">
+                            { format!("{:.2} s", self.time) }
+                        </div>
+                    </menu>
+                    <menu class="menu-bottom">
                         <div onclick={set_sinusoid1}>
                             { "Sinusoid1" }
                         </div>
@@ -218,7 +230,7 @@ impl Component for DemoApp {
                             { "Wave" }
                         </div>
                     </menu>
-                </nav>
+                </div>
             </main>
         }
     }
