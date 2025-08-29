@@ -665,11 +665,18 @@ dependencies = [
 name = "kreida"
 version = "0.1.0"
 dependencies = [
+ "kreida-core",
+]
+
+[[package]]
+name = "kreida-core"
+version = "0.1.0"
+dependencies = [
  "num",
 ]
 
 [[package]]
-name = "kreida-wasm-demo"
+name = "kreida-demo"
 version = "0.1.0"
 dependencies = [
  "console_error_panic_hook",

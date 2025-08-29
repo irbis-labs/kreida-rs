@@ -1,0 +1,13 @@
+.env
+.zed/
+.DS_Store
+
+dist/
+
+node_modules/
+.parcel-cache/
+coverage/
+
+npm-debug.log*
+yarn-error.log
+pnpm-debug.log

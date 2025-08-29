@@ -1,5 +1,5 @@
 use gloo::console;
-use kreida_wasm_demo::Demo;
+use kreida_demo::Demo;
 use yew::Renderer;
 
 fn main() {

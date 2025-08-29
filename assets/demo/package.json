@@ -1,0 +1,24 @@
+{
+  "name": "kreida-demo-assets",
+  "version": "0.2.0",
+  "main": "src/index.js",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --mode production",
+    "preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "sass": "^1.85.1",
+    "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "kreida-demo": "file:../../crates/demo",
+    "@fortawesome/fontawesome-free": "^7"
+  }
+}
