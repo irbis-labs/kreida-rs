@@ -10,8 +10,7 @@ pub struct Canvas {
 impl Canvas {
     pub fn new(width: u32, height: u32) -> Self {
         let len = (width * height) as usize;
-        let mut buf = Vec::with_capacity(len);
-        buf.resize(len, Color::transparent());
+        let buf = vec![Color::transparent(); len];
         Canvas { buf, width, height }
     }
 

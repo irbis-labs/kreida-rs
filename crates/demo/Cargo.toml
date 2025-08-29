@@ -13,6 +13,7 @@ version.workspace = true
 [dependencies]
 kreida = { path = "../.." }
 
+derive_more = { workspace = true, features = ["from"] }
 console_error_panic_hook = { workspace = true }
 futures = { workspace = true }
 gloo = { workspace = true, default-features = false, features = [
