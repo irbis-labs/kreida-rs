@@ -1,14 +1,5 @@
 use derive_more::From;
 
-#[derive(Clone, Copy)]
-pub enum Fun {
-    Sinusoid1,
-    Sinusoid2,
-    Lines,
-    Spirograph,
-    Wave,
-}
-
 #[derive(From)]
 pub enum Msg {
     Command(Cmd),
@@ -24,6 +15,5 @@ pub enum Evt {
 pub enum Cmd {
     ToggleDark,
     ToggleFullscreen,
-    Select(Fun),
     Start,
 }

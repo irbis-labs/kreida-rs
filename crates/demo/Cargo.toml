@@ -29,3 +29,4 @@ web-sys = { workspace = true, features = [
     "ImageData",
 ] }
 yew = { workspace = true, features = ["csr"] }
+yew-router = { workspace = true }
