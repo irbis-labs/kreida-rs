@@ -683,7 +683,6 @@ dependencies = [
  "futures",
  "gloo 0.11.0",
  "kreida",
- "wasm-bindgen",
  "web-sys",
  "yew",
 ]

@@ -2,10 +2,13 @@ use gloo::console;
 use gloo::events::EventListener;
 use gloo::render::AnimationFrame;
 use gloo::render::request_animation_frame;
-use wasm_bindgen::JsCast;
+use web_sys::CanvasRenderingContext2d;
 use web_sys::Document;
 use web_sys::HtmlCanvasElement;
 use web_sys::HtmlElement;
+use web_sys::ImageData;
+use web_sys::wasm_bindgen::Clamped;
+use web_sys::wasm_bindgen::JsCast;
 use yew::prelude::*;
 
 use crate::effects::Effect;
@@ -279,13 +282,12 @@ impl Demo {
     }
 
     fn render_frame(&mut self) {
-        let cnv = self.canvas_node.cast::<HtmlCanvasElement>();
-        if let Some(cnv) = cnv {
-            let ctx = cnv
+        if let Some(canvas_el) = self.canvas_node.cast::<HtmlCanvasElement>() {
+            let ctx = canvas_el
                 .get_context("2d")
                 .unwrap()
                 .unwrap()
-                .dyn_into::<web_sys::CanvasRenderingContext2d>()
+                .dyn_into::<CanvasRenderingContext2d>()
                 .unwrap();
             let (width, height) = (self.canvas.width(), self.canvas.height());
             let mut buf = self.canvas.buffer();
@@ -296,10 +298,9 @@ impl Demo {
                 EffectFun::Sinusoid1(o) => o.update(&mut buf, self.time),
                 EffectFun::Sinusoid2(o) => o.update(&mut buf, self.time),
             };
-            let clamped = wasm_bindgen::Clamped(buf.as_bytes());
+            let clamped = Clamped(buf.as_bytes());
             let image_data =
-                web_sys::ImageData::new_with_u8_clamped_array_and_sh(clamped, width, height)
-                    .unwrap();
+                ImageData::new_with_u8_clamped_array_and_sh(clamped, width, height).unwrap();
 
             ctx.put_image_data(&image_data, 0.0, 0.0).unwrap();
         }

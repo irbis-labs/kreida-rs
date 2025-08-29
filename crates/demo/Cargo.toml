@@ -21,7 +21,6 @@ gloo = { workspace = true, default-features = false, features = [
     "render",
     "utils"
 ] }
-wasm-bindgen = "0.2.71"
 web-sys = { workspace = true, features = [
     "Window",
     "HtmlCanvasElement",
