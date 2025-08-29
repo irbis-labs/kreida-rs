@@ -1,12 +1,9 @@
-#![recursion_limit = "512"]
-
-use gloo::render::{AnimationFrame, request_animation_frame};
-
 use gloo::console;
+use gloo::events::EventListener;
+use gloo::render::{AnimationFrame, request_animation_frame};
 
 use crate::effects::{Effect, Lines, Sinusoid1, Sinusoid2, Spirograph, Wave};
 use wasm_bindgen::JsCast;
-use wasm_bindgen::prelude::*;
 use web_sys::HtmlElement;
 use web_sys::{Document, HtmlCanvasElement};
 use yew::prelude::*;
@@ -15,7 +12,11 @@ pub mod effects;
 
 pub struct Demo {
     document: Document,
-    // body: HtmlElement,
+    #[allow(dead_code)]
+    on_resize: EventListener,
+    #[allow(dead_code)]
+    on_fullscreen_change: EventListener,
+    // We need to keep a reference to the body element to request fullscreen
     body_node: NodeRef,
     canvas: kreida::Canvas,
     // canvas_element: HtmlCanvasElement,
@@ -51,6 +52,7 @@ enum EffectFun {
 pub enum Msg {
     ToggleDark,
     ToggleFullscreen,
+    Fullscreen(bool),
     Resize,
     Select(Fun),
     Start,
@@ -64,26 +66,27 @@ impl Component for Demo {
     fn create(ctx: &Context<Self>) -> Self {
         let window = web_sys::window().expect("global window");
         let document = window.document().expect("window document");
-        // let body = document.body().expect("document body");
 
-        // let canvas_node: HtmlCanvasElement = document
-        //     .create_element("canvas")
-        //     .unwrap()
-        //     .dyn_into()
-        //     .unwrap();
-        // body.append_child(&canvas_node);
-
-        let on_resize = Closure::wrap(Box::new({
+        let on_resize = EventListener::new(&window, "resize", {
             let link = ctx.link().clone();
-            move |_: web_sys::Event| link.send_message(Msg::Resize)
-        }) as Box<dyn Fn(_)>);
-        window.set_onresize(Some(on_resize.as_ref().unchecked_ref()));
-        std::mem::forget(on_resize);
+            move |_event| link.send_message(Msg::Resize)
+        });
 
-        console::log!("123");
+        let on_fullscreen_change = EventListener::new(&window, "fullscreenchange", {
+            let link = ctx.link().clone();
+            let document = document.clone();
+            move |_event| {
+                let fullscreen_element = document.fullscreen_element();
+                let is_fullscreen = fullscreen_element.is_some();
+                console::log!("Fullscreen element:", fullscreen_element);
+                link.send_message(Msg::Fullscreen(is_fullscreen))
+            }
+        });
 
         Demo {
             document,
+            on_resize,
+            on_fullscreen_change,
             body_node: NodeRef::default(),
             canvas: kreida::Canvas::new(320, 240),
             canvas_node: NodeRef::default(),
@@ -106,6 +109,10 @@ impl Component for Demo {
             }
             Msg::ToggleFullscreen => {
                 self.toggle_fullscreen();
+                true
+            }
+            Msg::Fullscreen(is_fullscreen) => {
+                self.is_fullscreen = is_fullscreen;
                 true
             }
             Msg::Resize => {
@@ -184,7 +191,7 @@ impl Component for Demo {
                     <canvas ref = {&self.canvas_node}></canvas>
                     <nav class="ui">
                         <h1>
-                            { format!("Kreida demo :: Rust + WAsm + Canvas 2D ({} side)", side) }
+                            { format!("Kreida animation demo :: Rust + WAsm + Canvas 2D ({} side)", side) }
                         </h1>
                         <menu class="top">
                             <div class="fps-counter">

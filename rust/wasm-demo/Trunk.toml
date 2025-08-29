@@ -1,41 +1,48 @@
 [build]
-# The index HTML file to drive the bundling process.
-target = "index.html"
-# Build in release mode.
-release = false
-# The output dir for all final assets.
-dist = "dist"
-# The public URL from which assets are to be served.
-public_url = "/"
+target = "index.html"       # The index HTML file to drive the bundling process.
+html_output = "index.html"  # The name of the output HTML file.
+release = true              # Build in release mode.
+dist = "dist"               # The output dir for all final assets.
+public_url = "/"            # The public URL from which assets are to be served.
+filehash = false            # Whether to include hash values in the output file names.
+inject_scripts = true       # Whether to inject scripts (and module preloads) into the finalized output.
+offline = false             # Run without network access
+frozen = false              # Require Cargo.lock and cache are up to date
+locked = false              # Require Cargo.lock is up to date
+minify = "on_release"       # Control minification: can be one of: never, on_release, always
+no_sri = false              # Allow disabling sub-resource integrity (SRI)
 
 [watch]
-# Additional paths to ignore.
-ignore = []
+# Paths to watch. The `build.target`'s parent folder is watched by default.
+watch = []
+# Paths to ignore.
+#ignore = []
 
 [serve]
-# The port to serve on.
-port = 8003
-# Open a browser tab once the initial build is complete.
-open = false
+addresses = ["127.0.0.1"]  # The address to serve on.
+port = 8003                # The port to serve on.
+aliases = ["http://kreida.irbis-labs.com.local"] # The aliases to serve on.
+open = false               # Open a browser tab once the initial build is complete.
+no_spa = false             # Whether to disable fallback to index.html for missing files.
+no_autoreload = false      # Disable auto-reload of the web app.
+no_error_reporting = false # Disable error reporting
+ws_protocol = "ws"         # Protocol used for autoreload WebSockets connection.
+# Additional headers set for responses.
+#headers = { "test-header" = "header value", "test-header2" = "header value 2" }
+# The certificate/private key pair to use for TLS, which is enabled if both are set.
+#tls_key_path = "self_signed_certs/key.pem"
+#tls_cert_path = "self_signed_certs/cert.pem"
 
-#[clean]
-## The output dir for all final assets.
-#dist = "dist"
-## Optionally perform a cargo clean.
-#cargo = false
-#
-### proxy
-## Proxies are optional, and default to `None`.
-## Proxies are only run as part of the `trunk serve` command.
-#
-#[[proxy]]
-## This proxy example has a backend and a rewrite field. Requests received on `rewrite` will be
-## proxied to the backend after rewriting the `rewrite` prefix to the `backend`'s URI prefix.
-## E.G., `/api/v1/resource/x/y/z` -> `/resource/x/y/z`
-#rewrite = "/api/v1/"
-#backend = "http://localhost:9000/"
-#
-#[[proxy]]
-## This proxy specifies only the backend, which is the only required field. In this example,
-## request URIs are not modified when proxied.
-#backend = "http://localhost:9000/api/v2/"
+[clean]
+dist = "dist" # The output dir for all final assets.
+cargo = false # Optionally perform a cargo clean.
+
+[tools]
+# Default dart-sass version to download.
+#sass = "1.69.5"
+# Default wasm-bindgen version to download.
+#wasm_bindgen = "0.2.89"
+# Default wasm-opt version to download.
+#wasm_opt = "version_116"
+# Default tailwindcss-cli version to download.
+#tailwindcss = "3.3.5"

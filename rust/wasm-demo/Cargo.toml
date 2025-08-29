@@ -11,7 +11,12 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 console_error_panic_hook = "0.1"
 futures = { version = "0.3" }
-gloo = { version = "0.11", default-features = false, features = ["console", "render", "utils"] }
+gloo = { version = "0.11", default-features = false, features = [
+    "console",
+    "events",
+    "render",
+    "utils"
+] }
 wasm-bindgen = "0.2.71"
 yew = { version = "0.21", features = ["csr"] }
 
