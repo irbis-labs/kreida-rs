@@ -1,12 +1,19 @@
 use gloo::console;
 use gloo::events::EventListener;
-use gloo::render::{AnimationFrame, request_animation_frame};
-
-use crate::effects::{Effect, Lines, Sinusoid1, Sinusoid2, Spirograph, Wave};
+use gloo::render::AnimationFrame;
+use gloo::render::request_animation_frame;
 use wasm_bindgen::JsCast;
+use web_sys::Document;
+use web_sys::HtmlCanvasElement;
 use web_sys::HtmlElement;
-use web_sys::{Document, HtmlCanvasElement};
 use yew::prelude::*;
+
+use crate::effects::Effect;
+use crate::effects::Lines;
+use crate::effects::Sinusoid1;
+use crate::effects::Sinusoid2;
+use crate::effects::Spirograph;
+use crate::effects::Wave;
 
 pub mod effects;
 

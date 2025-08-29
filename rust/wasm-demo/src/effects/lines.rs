@@ -10,8 +10,8 @@ impl Effect for Lines {
         let w_2: i32 = buffer.width() as i32 / 2;
         let h_2: i32 = buffer.height() as i32 / 2;
 
-        use std::f64::consts::PI;
         use std::cmp::min;
+        use std::f64::consts::PI;
 
         buffer.fade(245);
 
@@ -27,8 +27,14 @@ impl Effect for Lines {
             let k2 = (1.555 + (tt * 0.03377).sin() * 0.69) * 100.0;
             let kk = 1.5 + (tt * 0.003).cos();
 
-            let a = Point::new(w_2 + (r * (tt + (k1 - kk)).cos()) as i32, h_2 + (r * (tt + (k2 - kk)).sin()) as i32);
-            let b = Point::new(w_2 + (r * (tt + (k1 + kk)).cos()) as i32, h_2 + (r * (tt + (k2 + kk)).sin()) as i32);
+            let a = Point::new(
+                w_2 + (r * (tt + (k1 - kk)).cos()) as i32,
+                h_2 + (r * (tt + (k2 - kk)).sin()) as i32,
+            );
+            let b = Point::new(
+                w_2 + (r * (tt + (k1 + kk)).cos()) as i32,
+                h_2 + (r * (tt + (k2 + kk)).sin()) as i32,
+            );
 
             let c1 = PI / 2.0 * (i % N) as f64 / N as f64;
             let color = Color::rgb(

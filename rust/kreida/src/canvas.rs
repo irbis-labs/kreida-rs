@@ -1,5 +1,5 @@
-use crate::Color;
 use crate::Buffer;
+use crate::Color;
 
 pub struct Canvas {
     buf: Vec<Color>,

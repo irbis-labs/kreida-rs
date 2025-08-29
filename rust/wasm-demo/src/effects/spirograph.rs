@@ -1,5 +1,5 @@
-use kreida::*;
 use kreida::fun::*;
+use kreida::*;
 
 use crate::effects::Effect;
 
@@ -30,8 +30,16 @@ impl Effect for Spirograph {
 
             let r0 = 1.0;
 
-            let r1 = r0 * step(map_range((0.0, 10.0), (3.0 / 23.0, 22.0 / 23.0), (tr1 * 3.0) % 10.0).sqrt(), 1.0 / 19.0);
-            let r2 = r1 * step(map_range((0.0, 10.0), (2.0 / 17.0, 16.0 / 17.0), (tr2 * 7.0) % 10.0).sqrt(), 1.0 / 14.0);
+            let r1 = r0
+                * step(
+                    map_range((0.0, 10.0), (3.0 / 23.0, 22.0 / 23.0), (tr1 * 3.0) % 10.0).sqrt(),
+                    1.0 / 19.0,
+                );
+            let r2 = r1
+                * step(
+                    map_range((0.0, 10.0), (2.0 / 17.0, 16.0 / 17.0), (tr2 * 7.0) % 10.0).sqrt(),
+                    1.0 / 14.0,
+                );
 
             let tc = tt * 0.005;
 

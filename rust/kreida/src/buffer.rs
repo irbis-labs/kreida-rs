@@ -2,8 +2,8 @@ use std::slice;
 
 use num::Integer;
 
-use super::space::*;
 use super::Color;
+use super::space::*;
 
 pub struct Buffer<'a> {
     buf: &'a mut [Color],

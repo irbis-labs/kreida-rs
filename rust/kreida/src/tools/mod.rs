@@ -1,10 +1,9 @@
 pub mod bar;
 pub mod line;
 
-use crate::Color;
-
 pub use self::bar::PixelBar;
 pub use self::line::PixelLine;
+use crate::Color;
 
 #[derive(Clone, Copy, Debug)]
 pub struct ToolBox {

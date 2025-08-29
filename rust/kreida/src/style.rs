@@ -19,11 +19,21 @@ impl Color {
     }
 
     pub fn black() -> Self {
-        Color { r: 0x00, g: 0x00, b: 0x00, a: 0xFF, }
+        Color {
+            r: 0x00,
+            g: 0x00,
+            b: 0x00,
+            a: 0xFF,
+        }
     }
 
     pub fn white() -> Self {
-        Color { r: 0xFF, g: 0xFF, b: 0xFF, a: 0xFF, }
+        Color {
+            r: 0xFF,
+            g: 0xFF,
+            b: 0xFF,
+            a: 0xFF,
+        }
     }
 
     pub fn rgb(r: u8, g: u8, b: u8) -> Self {
@@ -35,19 +45,19 @@ impl Color {
     }
 
     pub fn red(self, r: u8) -> Self {
-        Color { r, .. self }
+        Color { r, ..self }
     }
 
     pub fn green(self, g: u8) -> Self {
-        Color { g, .. self }
+        Color { g, ..self }
     }
 
     pub fn blue(self, b: u8) -> Self {
-        Color { b, .. self }
+        Color { b, ..self }
     }
 
     pub fn alpha(self, a: u8) -> Self {
-        Color { a, .. self }
+        Color { a, ..self }
     }
 
     pub fn as_bool(&self) -> bool {
