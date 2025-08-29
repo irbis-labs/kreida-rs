@@ -13,36 +13,39 @@ pub struct Buffer<'a> {
 
 impl<'a> Buffer<'a> {
     pub fn new(buf: &'a mut [Color], width: u32) -> Self {
-        assert!(width > 0);
-        assert!(width <= i32::max_value() as u32);
+        debug_assert!(width > 0);
+        debug_assert!(width <= i32::MAX as u32);
         let len = buf.len() as u32;
         let (height, rem) = len.div_rem(&width);
-        assert!(rem == 0);
-        assert!(height <= i32::max_value() as u32);
+        debug_assert_eq!(rem, 0);
+        debug_assert!(height <= i32::MAX as u32);
         Buffer { buf, width, height }
     }
 
+    #[inline(always)]
     pub fn height(&self) -> u32 {
         self.height
     }
 
+    #[inline(always)]
     pub fn width(&self) -> u32 {
         self.width
     }
 
+    #[inline(always)]
     pub fn buf_mut(&mut self) -> &mut [Color] {
         &mut self.buf
     }
 
+    #[inline(always)]
     pub fn as_bytes(&self) -> &[u8] {
-        let len = self.buf.len() * std::mem::size_of::<Color>();
+        let len = self.buf.len() * size_of::<Color>();
         unsafe { slice::from_raw_parts(self.buf.as_ptr() as *const u8, len) }
     }
 
+    #[inline(always)]
     pub fn clear(&mut self, color: Color) {
         self.buf.fill(color);
-        // let count = self.buf.len();
-        // unsafe { std::ptr::copy(&color, self.buf.as_mut_ptr(), count) };
     }
 
     pub fn fade(&mut self, k: u8) {
@@ -51,6 +54,7 @@ impl<'a> Buffer<'a> {
         }
     }
 
+    #[inline]
     pub fn point(&mut self, x: i32, y: i32, color: Color) {
         if clip_value(x, 0, self.width as i32).is_fixed()
             || clip_value(y, 0, self.height as i32).is_fixed()

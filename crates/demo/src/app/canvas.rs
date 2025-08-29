@@ -1,3 +1,4 @@
+use derive_more::From;
 use gloo::console;
 use gloo::events::EventListener;
 use gloo::render::AnimationFrame;
@@ -21,6 +22,7 @@ use crate::effects::Lines;
 use crate::effects::Sinusoid1;
 use crate::effects::Sinusoid2;
 use crate::effects::Spirograph;
+use crate::effects::Tiles;
 use crate::effects::Wave;
 
 #[derive(Properties, Clone, PartialEq)]
@@ -45,12 +47,14 @@ pub struct CanvasView {
     frames: Vec<f64>,
 }
 
+#[derive(From)]
 pub enum EffectFun {
     Sinusoid1(Sinusoid1),
     Sinusoid2(Sinusoid2),
     Lines(Lines),
     Spirograph(Spirograph),
     Wave(Wave),
+    Tiles(Tiles),
 }
 
 impl Component for CanvasView {
@@ -77,6 +81,8 @@ impl Component for CanvasView {
             }
         });
 
+        ctx.link().send_message(Cmd::Start);
+
         CanvasView {
             document,
             on_resize,
@@ -89,7 +95,7 @@ impl Component for CanvasView {
             is_fullscreen: false,
             time: 0.0,
             frames: Vec::with_capacity(64),
-            effect: EffectFun::Wave(Wave {}),
+            effect: Self::effect_from_fun(&ctx.props().fun),
         }
     }
 
@@ -111,6 +117,7 @@ impl Component for CanvasView {
                         EffectFun::Lines(o) => o.set_time(self.time),
                         EffectFun::Sinusoid1(o) => o.set_time(self.time),
                         EffectFun::Sinusoid2(o) => o.set_time(self.time),
+                        EffectFun::Tiles(o) => o.set_time(self.time),
                     };
                     if self.raf.is_none() {
                         self.resize();
@@ -142,14 +149,7 @@ impl Component for CanvasView {
     fn changed(&mut self, ctx: &Context<Self>, old_props: &Self::Properties) -> bool {
         if old_props.fun != ctx.props().fun {
             drop(self.raf.take());
-            self.effect = match ctx.props().fun {
-                Fun::Home => EffectFun::Wave(Wave::default()),
-                Fun::Wave => EffectFun::Wave(Wave::default()),
-                Fun::Spirograph => EffectFun::Spirograph(Spirograph::default()),
-                Fun::Lines => EffectFun::Lines(Lines::default()),
-                Fun::Sinusoid1 => EffectFun::Sinusoid1(Sinusoid1::default()),
-                Fun::Sinusoid2 => EffectFun::Sinusoid2(Sinusoid2::default()),
-            };
+            self.effect = Self::effect_from_fun(&ctx.props().fun);
             ctx.link().send_message(Cmd::Start);
             true
         } else {
@@ -207,6 +207,11 @@ impl Component for CanvasView {
                     </menu>
                     <menu class="menu-bottom">
                         <div>
+                            <Link<Fun> to={Fun::Home}>
+                                { "Tiles" }
+                            </Link<Fun>>
+                        </div>
+                        <div>
                             <Link<Fun> to={Fun::Sinusoid1}>
                                 { "Sinusoid1" }
                             </Link<Fun>>
@@ -239,6 +244,17 @@ impl Component for CanvasView {
 }
 
 impl CanvasView {
+    fn effect_from_fun(fun: &Fun) -> EffectFun {
+        match fun {
+            Fun::Home => Tiles::new().into(),
+            Fun::Wave => Wave::new().into(),
+            Fun::Spirograph => Spirograph::default().into(),
+            Fun::Lines => Lines::default().into(),
+            Fun::Sinusoid1 => Sinusoid1::default().into(),
+            Fun::Sinusoid2 => Sinusoid2::default().into(),
+        }
+    }
+
     fn request_frame(&mut self, ctx: &Context<Self>) {
         let link = ctx.link().clone();
         let handle = request_animation_frame(move |tm| link.send_message(Evt::Step(tm)));
@@ -297,6 +313,7 @@ impl CanvasView {
                 EffectFun::Lines(o) => o.update(&mut buf, self.time),
                 EffectFun::Sinusoid1(o) => o.update(&mut buf, self.time),
                 EffectFun::Sinusoid2(o) => o.update(&mut buf, self.time),
+                EffectFun::Tiles(o) => o.update(&mut buf, self.time),
             };
             let clamped = Clamped(buf.as_bytes());
             let image_data =

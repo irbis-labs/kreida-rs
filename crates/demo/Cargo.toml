@@ -22,6 +22,8 @@ gloo = { workspace = true, default-features = false, features = [
     "render",
     "utils"
 ] }
+rand = { workspace = true, features = ["std"] }
+getrandom = { version = "0.3", features = ["wasm_js"] }
 web-sys = { workspace = true, features = [
     "Window",
     "HtmlCanvasElement",

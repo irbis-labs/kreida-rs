@@ -9,16 +9,19 @@ pub struct PixelBar {
 }
 
 impl HasToolBox for PixelBar {
+    #[inline(always)]
     fn toolbox(&self) -> &ToolBox {
         &self.toolbox
     }
 
+    #[inline(always)]
     fn toolbox_mut(&mut self) -> &mut ToolBox {
         &mut self.toolbox
     }
 }
 
 impl PixelBar {
+    #[inline(always)]
     pub fn new(toolbox: ToolBox) -> Self {
         PixelBar { toolbox }
     }
@@ -38,9 +41,7 @@ impl PixelBar {
 
         let mut start = (top * buf.width() as i32 + left) as usize;
         for _ in top..bottom {
-            for v in &mut buf.buf_mut()[start..start + width] {
-                *v = self.toolbox.fg;
-            }
+            buf.buf_mut()[start..start + width].fill(self.toolbox.fg);
             start += buf.width() as usize;
         }
 

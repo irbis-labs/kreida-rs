@@ -8,59 +8,67 @@ pub enum FixResult<T> {
 }
 
 impl<T> FixResult<T> {
+    #[inline(always)]
     pub fn into_inner(self) -> T {
         match self {
-            FixResult::Original(value) => value,
-            FixResult::Fixed(value) => value,
+            Original(value) => value,
+            Fixed(value) => value,
         }
     }
 
+    #[inline(always)]
     pub fn into_inner_checked(self) -> (T, bool) {
         match self {
-            FixResult::Original(value) => (value, true),
-            FixResult::Fixed(value) => (value, false),
+            Original(value) => (value, true),
+            Fixed(value) => (value, false),
         }
     }
 
+    #[inline(always)]
     pub fn is_original(&self) -> bool {
         match *self {
-            FixResult::Original(_) => true,
+            Original(_) => true,
             _ => false,
         }
     }
 
+    #[inline(always)]
     pub fn is_fixed(&self) -> bool {
         match *self {
-            FixResult::Fixed(_) => true,
+            Fixed(_) => true,
             _ => false,
         }
     }
 
+    #[inline(always)]
     pub fn into_original(self) -> Option<T> {
         match self {
-            FixResult::Original(value) => Some(value),
+            Original(value) => Some(value),
             _ => None,
         }
     }
 
+    #[inline(always)]
     pub fn into_fixed(self) -> Option<T> {
         match self {
-            FixResult::Fixed(value) => Some(value),
+            Fixed(value) => Some(value),
             _ => None,
         }
     }
 
     /// Maps an CheckResult<T> to CheckResult<U> by applying a function to a contained value.
+    #[inline(always)]
     pub fn map<U, F>(self, f: F) -> FixResult<U>
     where
         F: FnOnce(T) -> U,
     {
         match self {
-            FixResult::Original(value) => FixResult::Original(f(value)),
-            FixResult::Fixed(value) => FixResult::Fixed(f(value)),
+            Original(value) => Original(f(value)),
+            Fixed(value) => Fixed(f(value)),
         }
     }
 
+    #[inline(always)]
     pub fn zip(self, other: Self) -> FixResult<(T, T)> {
         match self.is_original() && other.is_original() {
             true => Original((self.into_inner(), other.into_inner())),
@@ -69,7 +77,7 @@ impl<T> FixResult<T> {
     }
 }
 
-#[inline]
+#[inline(always)]
 pub fn sort<T>(a: T, b: T) -> FixResult<(T, T)>
 where
     T: PartialOrd,
@@ -120,6 +128,7 @@ impl<T> From<(T, T)> for Point<T>
 where
     T: Num + PartialOrd + PartialEq + Copy,
 {
+    #[inline(always)]
     fn from((x, y): (T, T)) -> Self {
         Point { x, y }
     }
@@ -129,20 +138,24 @@ impl<T> Point<T>
 where
     T: Num + PartialOrd + PartialEq + Copy,
 {
+    #[inline(always)]
     pub fn new(x: T, y: T) -> Self {
         Point { x, y }
     }
 
+    #[inline(always)]
     pub fn into_tuple(self) -> (T, T) {
         (self.x, self.y)
     }
 
+    #[inline]
     pub fn clip(self, rect: Rect<T>) -> FixResult<Self> {
         let x = clip_value(self.x, rect.a.x, rect.b.x);
         let y = clip_value(self.y, rect.a.y, rect.b.y);
         x.zip(y).map(Self::from)
     }
 
+    #[inline(always)]
     pub fn transpose(self) -> Self {
         Point::new(self.y, self.x)
     }
@@ -163,6 +176,7 @@ where
     B: Into<Point<T>>,
     T: Num + PartialOrd + PartialEq + Copy,
 {
+    #[inline(always)]
     fn from((a, b): (A, B)) -> Self {
         Rect::new(a, b)
     }
@@ -172,6 +186,7 @@ impl<T> From<(T, T, T, T)> for Rect<T>
 where
     T: Num + PartialOrd + PartialEq + Copy,
 {
+    #[inline(always)]
     fn from((ax, ay, bx, by): (T, T, T, T)) -> Self {
         Rect::new((ax, ay), (bx, by))
     }
@@ -181,18 +196,20 @@ impl<T> Rect<T>
 where
     T: Num + PartialOrd + PartialEq + Copy,
 {
+    #[inline(always)]
     pub fn new<A, B>(a: A, b: B) -> Self
     where
         A: Into<Point<T>>,
         B: Into<Point<T>>,
     {
-        return Rect {
+        Rect {
             a: a.into(),
             b: b.into(),
         }
-        .norm();
+        .norm()
     }
 
+    #[inline]
     pub fn norm(self) -> Self {
         let (ax, bx) = sort(self.a.x, self.b.x).into_inner();
         let (ay, by) = sort(self.a.y, self.b.y).into_inner();
@@ -213,10 +230,12 @@ where
         }
     }
 
+    #[inline(always)]
     pub fn into_tuple(self) -> (Point<T>, Point<T>) {
         (self.a, self.b)
     }
 
+    #[inline]
     pub fn clip(self, clip_rect: impl Into<Rect<T>>) -> FixResult<Self> {
         let clip_rect = clip_rect.into();
         let a = self.a.clip(clip_rect);
@@ -224,6 +243,7 @@ where
         a.zip(b).map(Self::from)
     }
 
+    #[inline(always)]
     pub fn is_collapsed(&self) -> bool {
         self.a.x == self.b.x || self.a.y == self.b.y
     }
