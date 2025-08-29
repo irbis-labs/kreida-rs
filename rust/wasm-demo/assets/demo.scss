@@ -2,21 +2,19 @@
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css";
 @import "https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap";
 
-body {
-  main {
-    font-family: 'Roboto', sans-serif;
-    overflow: hidden;
-    padding: 0;
-    margin: 0;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: #fff;
-  }
+main {
+  font-family: 'Roboto', sans-serif;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #fff;
 
-  &.dark main {
+  &.dark {
     background-color: black;
 
     .ui {
@@ -24,7 +22,7 @@ body {
     }
   }
 
-  &.light main {
+  &.light {
     background: #fff;
 
     .ui {

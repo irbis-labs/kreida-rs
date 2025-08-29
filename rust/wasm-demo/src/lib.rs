@@ -183,49 +183,47 @@ impl Component for Demo {
         };
 
         html! {
-            <body
+            <main
                 ref = {&self.body_node}
                 class = {side_class}
             >
-                <main>
-                    <canvas ref = {&self.canvas_node}></canvas>
-                    <nav class="ui">
-                        <h1>
-                            { format!("Kreida animation demo :: Rust + WAsm + Canvas 2D ({} side)", side) }
-                        </h1>
-                        <menu class="top">
-                            <div class="fps-counter">
-                                { self.frames.len() }
+                <canvas ref = {&self.canvas_node}></canvas>
+                <nav class="ui">
+                    <h1>
+                        { format!("Kreida animation demo :: Rust + WAsm + Canvas 2D ({} side)", side) }
+                    </h1>
+                    <menu class="top">
+                        <div class="fps-counter">
+                            { self.frames.len() }
+                        </div>
+                        <div class="mode">
+                            <div class="mode" onclick={toggle_dark}>
+                                <i class={["fa", side_icon]}></i>
                             </div>
-                            <div class="mode">
-                                <div class="mode" onclick={toggle_dark}>
-                                    <i class={["fa", side_icon]}></i>
-                                </div>
-                               <div class="fullscreen" onclick={toggle_fullscreen}>
-                                    <i class={["fa", fullscreen_icon]}></i>
-                                </div>
+                           <div class="fullscreen" onclick={toggle_fullscreen}>
+                                <i class={["fa", fullscreen_icon]}></i>
                             </div>
-                        </menu>
-                        <menu class="bottom">
-                            <div onclick={set_sinusoid1}>
-                                { "Sinusoid1" }
-                            </div>
-                            <div onclick={set_sinusoid2}>
-                                { "Sinusoid2" }
-                            </div>
-                            <div onclick={set_lines}>
-                                { "Lines" }
-                            </div>
-                            <div onclick={set_spirograph}>
-                                { "Spirograph" }
-                            </div>
-                            <div onclick={set_wave}>
-                                { "Wave" }
-                            </div>
-                        </menu>
-                    </nav>
-                </main>
-            </body>
+                        </div>
+                    </menu>
+                    <menu class="bottom">
+                        <div onclick={set_sinusoid1}>
+                            { "Sinusoid1" }
+                        </div>
+                        <div onclick={set_sinusoid2}>
+                            { "Sinusoid2" }
+                        </div>
+                        <div onclick={set_lines}>
+                            { "Lines" }
+                        </div>
+                        <div onclick={set_spirograph}>
+                            { "Spirograph" }
+                        </div>
+                        <div onclick={set_wave}>
+                            { "Wave" }
+                        </div>
+                    </menu>
+                </nav>
+            </main>
         }
     }
 }
