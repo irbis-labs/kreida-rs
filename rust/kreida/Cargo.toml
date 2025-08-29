@@ -10,7 +10,7 @@ readme = "README.md"
 homepage = "https://github.com/irbis-labs/kreida-rs"
 repository = "https://github.com/irbis-labs/kreida-rs"
 documentation = "https://docs.rs/kreida-rs/"
-edition = "2021"
+edition = "2024"
 publish = true
 
 [badges]
