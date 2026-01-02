@@ -7,3 +7,6 @@
 /target/
 /env/
 .env
+
+# Rust lockfile (library repo: must not be committed)
+Cargo.lock
